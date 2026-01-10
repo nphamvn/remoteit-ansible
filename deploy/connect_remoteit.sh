@@ -54,7 +54,3 @@ fi
 
 echo "DEVICE_ID: ${DEVICE_ID}"
 echo "SSH_SERVICE_ID: ${SSH_SERVICE_ID}"
-# connect using remote.it CLI
-remoteit connection add --id "${SSH_SERVICE_ID}" --port 30001 --p2p true
-remoteit connection connect --id "${SSH_SERVICE_ID}"
-remoteit status

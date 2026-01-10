@@ -40,17 +40,21 @@ jobs:
                   mkdir -p ~/.remoteit
                   cat > ~/.remoteit/credentials <<'EOF'
                   [DEFAULT]
-                  R3_ACCESS_KEY_ID=${{ secrets.R3_ACCESS_KEY_ID }}
-                  R3_SECRET_ACCESS_KEY=${{ secrets.R3_SECRET_ACCESS_KEY }}
+                  R3_ACCESS_KEY_ID=CJX27WASA6U5SVBOJY6W
+                  R3_SECRET_ACCESS_KEY=6DvJ1up2yuCMQ6P2JMAmndRsMs0kRwyEOMhqNEPZ
                   EOF
                   chmod 600 ~/.remoteit/credentials
                   remoteit account credentials
-            - name: Connect remoteit
+            - name: Get SSH Service Id
               shell: bash
               run: |
                   chmod +x ./deploy/connect_remoteit.sh
                   ./deploy/connect_remoteit.sh "CJX27WASA6U5SVBOJY6W" "6DvJ1up2yuCMQ6P2JMAmndRsMs0kRwyEOMhqNEPZ" "ec2" "SSH"
-
+            - name: Connect
+              run: |
+                remoteit connection add --id "90:00:00:00:00:31:07:C8" --port 30001 --p2p true
+                remoteit connection connect --id "90:00:00:00:00:31:07:C8"
+                remoteit status
             - name: Install Ansible
               run: |
                   sudo apt-get update
