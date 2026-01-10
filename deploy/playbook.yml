@@ -12,8 +12,5 @@
   tasks:
     - name: Ping host
       ansible.builtin.ping:
-    - name: Write a file to the remote host
-      ansible.builtin.copy:
-        dest: /home/pi/deployed_by_ansible.txt
-        content: "This file was deployed by Ansible on {{ ansible_date_time.date }} at {{ ansible_date_time.time }}.\n"
-        mode: '0644'
+    - name: Write a file to the remote host use command module
+      ansible.builtin.command: echo "Deployment successful!" > /home/pi/deployment_status.txt      
