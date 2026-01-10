@@ -57,10 +57,13 @@ jobs:
                 sudo remoteit connection connect --id 90:00:00:00:00:2A:D4:1E && sleep 30 && \
                 remoteit status
 
+            - name: Install sshpass
+              run: sudo apt-get update && sudo apt-get install -y sshpass
+
             - name: Test SSH Connection
               shell: bash
               run: |
-                ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 30001 pi@localhost "echo 'SSH connection successful'"                
+                sshpass -p 'zzzz' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 30001 pi@localhost "echo 'SSH connection successful'"                
             # - name: Install Ansible
             #   run: |
             #       sudo apt-get update
