@@ -1,6 +1,8 @@
 #!/bin/bash
+source ~/.remoteit/credentials || true # littel hack to get R3_ACCESS_KEY_ID and R3_SECRET_ACCESS_KEY into the script
+
 set -e
-source ~/.remoteit/credentials
+
 PLANT="${1}"
 SSH_SERVICE_NAME="${2}"
 
