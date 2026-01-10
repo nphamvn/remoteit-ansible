@@ -41,8 +41,7 @@ jobs:
                   R3_SECRET_ACCESS_KEY=6DvJ1up2yuCMQ6P2JMAmndRsMs0kRwyEOMhqNEPZ
                   EOF
                   chmod 600 ~/.remoteit/credentials
-                  cat ~/.remoteit/credentials
-
+                  remoteit account credentials
             - name: Connect remoteit
               run: |
                   chmod +x ./deploy/connect_remoteit.sh
