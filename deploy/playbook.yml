@@ -6,7 +6,7 @@
     ansible_host: localhost
     ansible_port: 30001
     ansible_user: pi
-    ansible_password: zzz
+    ansible_password: zzzz
     ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
 
   tasks:
