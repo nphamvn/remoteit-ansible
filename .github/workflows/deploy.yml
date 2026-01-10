@@ -37,8 +37,8 @@ jobs:
                   mkdir -p ~/.remoteit
                   cat > ~/.remoteit/credentials <<'EOF'
                   [DEFAULT]
-                  R3_ACCESS_KEY_ID=CJX27WASA6U5SVBOJY6W
-                  R3_SECRET_ACCESS_KEY=6DvJ1up2yuCMQ6P2JMAmndRsMs0kRwyEOMhqNEPZ
+                  R3_ACCESS_KEY_ID=${{ secrets.R3_ACCESS_KEY_ID }}
+                  R3_SECRET_ACCESS_KEY=${{ secrets.R3_SECRET_ACCESS_KEY }}
                   EOF
                   chmod 600 ~/.remoteit/credentials
                   remoteit account credentials
@@ -50,4 +50,5 @@ jobs:
             - name: Deploy Application
               working-directory: ./deploy
               run: |
+                  chmod +x ./deploy.sh
                   ./deploy.sh
