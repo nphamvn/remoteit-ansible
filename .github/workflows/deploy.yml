@@ -56,12 +56,12 @@ jobs:
                 remoteit status && sleep 5 && \
                 sudo remoteit connection connect --id 90:00:00:00:00:31:08:80 && sleep 10 && \
                 remoteit status
-            - name: Install Ansible
-              run: |
-                  sudo apt-get update
-                  sudo apt-get install -y ansible
+            # - name: Install Ansible
+            #   run: |
+            #       sudo apt-get update
+            #       sudo apt-get install -y ansible
             
-            - name: Deploy Application
-              working-directory: ./deploy
-              run: |
-                  ansible-playbook playbook.yml
+            # - name: Deploy Application
+            #   working-directory: ./deploy
+            #   run: |
+            #       ansible-playbook playbook.yml
