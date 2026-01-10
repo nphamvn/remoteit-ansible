@@ -49,19 +49,19 @@ jobs:
               shell: bash
               run: |
                   chmod +x ./deploy/connect_remoteit.sh
-                  ./deploy/connect_remoteit.sh "CJX27WASA6U5SVBOJY6W" "6DvJ1up2yuCMQ6P2JMAmndRsMs0kRwyEOMhqNEPZ" "ec2" "SSH"
+                  ./deploy/connect_remoteit.sh "CJX27WASA6U5SVBOJY6W" "6DvJ1up2yuCMQ6P2JMAmndRsMs0kRwyEOMhqNEPZ" "raspberrypi" "SSH"
             - name: Connect
               run: |
-                sudo remoteit connection add --id 90:00:00:00:00:31:08:80 --port 30001 --p2p true && sleep 5 && \
+                sudo remoteit connection add --id 90:00:00:00:00:2A:D4:1E --port 30001 --p2p true && sleep 5 && \
                 remoteit status && sleep 5 && \
-                sudo remoteit connection connect --id 90:00:00:00:00:31:08:80 && sleep 10 && \
+                sudo remoteit connection connect --id 90:00:00:00:00:2A:D4:1E && sleep 10 && \
                 remoteit status
-            # - name: Install Ansible
-            #   run: |
-            #       sudo apt-get update
-            #       sudo apt-get install -y ansible
+            - name: Install Ansible
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y ansible
             
-            # - name: Deploy Application
-            #   working-directory: ./deploy
-            #   run: |
-            #       ansible-playbook playbook.yml
+            - name: Deploy Application
+              working-directory: ./deploy
+              run: |
+                  ansible-playbook playbook.yml
