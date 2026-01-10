@@ -1,5 +1,8 @@
 on:
-    workflow_dispatch:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 env:
     HOST: localhost:30001
     USERNAME: pi
@@ -46,7 +49,7 @@ jobs:
               shell: bash
               run: |
                   chmod +x ./deploy/connect_remoteit.sh
-                  ./deploy/connect_remoteit.sh
+                  ./deploy/connect_remoteit.sh "CJX27WASA6U5SVBOJY6W" "6DvJ1up2yuCMQ6P2JMAmndRsMs0kRwyEOMhqNEPZ"
 
             - name: Install Ansible
               run: |
