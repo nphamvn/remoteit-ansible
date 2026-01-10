@@ -52,9 +52,9 @@ jobs:
                   ./deploy/connect_remoteit.sh "CJX27WASA6U5SVBOJY6W" "6DvJ1up2yuCMQ6P2JMAmndRsMs0kRwyEOMhqNEPZ" "raspberrypi" "SSH"
             - name: Connect
               run: |
-                sudo remoteit connection add --id 90:00:00:00:00:2A:D4:1E --port 30001 --p2p true && sleep 5 && \
-                remoteit status && sleep 5 && \
-                sudo remoteit connection connect --id 90:00:00:00:00:2A:D4:1E && sleep 10 && \
+                sudo remoteit connection add --id 90:00:00:00:00:2A:D4:1E --port 30001 --p2p true && sleep 30 && \
+                remoteit status && \
+                sudo remoteit connection connect --id 90:00:00:00:00:2A:D4:1E && sleep 30 && \
                 remoteit status
             - name: Install Ansible
               run: |
