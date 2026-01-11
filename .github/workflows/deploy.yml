@@ -6,6 +6,7 @@ on:
 env:
     HOST: localhost:30001
     USERNAME: pi
+    PLANT: raspberrypi
 jobs:
     deploy:
         runs-on: ubuntu-latest
@@ -49,7 +50,11 @@ jobs:
               shell: bash
               run: |
                   chmod +x ./deploy/connect_remoteit.sh
-                  ./deploy/connect_remoteit.sh "CJX27WASA6U5SVBOJY6W" "6DvJ1up2yuCMQ6P2JMAmndRsMs0kRwyEOMhqNEPZ" "raspberrypi" "SSH"
+                  ./deploy/connect_remoteit.sh
+              env:
+                  PLANT: ${{ env.PLANT }}
+                  R3_ACCESS_KEY_ID: ${{ secrets.R3_ACCESS_KEY_ID }}
+                  R3_SECRET_ACCESS_KEY: ${{ secrets.R3_SECRET_ACCESS_KEY }}
             - name: Connect
               run: |
                 sudo remoteit connection add --id 90:00:00:00:00:2A:D4:1E --port 30001 --p2p true && sleep 30 && \

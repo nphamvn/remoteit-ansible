@@ -1,15 +1,15 @@
-#!/bin/bash
-#source ~/.remoteit/credentials || true # littel hack to get R3_ACCESS_KEY_ID and R3_SECRET_ACCESS_KEY into the script
+#!/usr/bin/env bash
+set -euo pipefail
 
-set -e
-
-R3_ACCESS_KEY_ID="${1}"
-R3_SECRET_ACCESS_KEY="${2}"
-PLANT="${3:-raspberrypi}"
-SSH_SERVICE_NAME="${4:-SSH}"
-echo "Using PLANT='${PLANT}' and SSH_SERVICE_NAME='${SSH_SERVICE_NAME}'"
-echo "R3_ACCESS_KEY_ID length='${#R3_ACCESS_KEY_ID}'"
-echo "R3_SECRET_ACCESS_KEY length='${#R3_SECRET_ACCESS_KEY}'"
+# Load .env nếu có (local)
+if [ -f ".env" ]; then
+  echo "Loading .env file"
+  set -a          # auto export
+  source .env
+  set +a
+fi
+SSH_SERVICE_NAME=${SSH_SERVICE_NAME:-"SSH"}
+echo "Finding ssh service id for plant '${PLANT}' using service name '${SSH_SERVICE_NAME}'"
 
 SECRET=`echo ${R3_SECRET_ACCESS_KEY} | base64 --decode`
 
