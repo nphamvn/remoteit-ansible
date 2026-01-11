@@ -90,7 +90,7 @@ jobs:
           PLANT: ${{ github.event.inputs.plant }}
           VERSION: ${{ github.event.inputs.version }}
           DEPLOY_GUI: ${{ github.event.inputs.deploy_gui }}
-  post_deploy:
+  complete_deploy:
     needs: deploy
     runs-on: ubuntu-latest
     if: always()
