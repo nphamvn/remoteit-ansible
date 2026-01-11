@@ -12,11 +12,12 @@
 
     plant: "{{ lookup('env','PLANT') }}"
     version: "{{ lookup('env','VERSION') }}"
+    deploy_gui: "{{ lookup('env','DEPLOY_GUI') | default('true') | bool }}"
 
   tasks:
-    - name: Deploy application version {{ version }} to plant {{ plant }}
+    - name: Deploy application version {{ version }} to plant {{ plant }} with GUI={{ deploy_gui }}
       ansible.builtin.shell: |
-        echo "Deploying version {{ version }} to plant {{ plant }}"
+        echo "Deploying version {{ version }} to plant {{ plant }} with GUI={{ deploy_gui }}"
         echo "{{ version }}" > ~/{{ version }}
       register: deploy_result
     - debug:

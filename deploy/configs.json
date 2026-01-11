@@ -3,6 +3,10 @@
         {
             "id": "raspberrypi",
             "network": "remoteit"
+        },
+        {
+            "id": "ec2",
+            "network": "vpn"
         }
     ]
 }

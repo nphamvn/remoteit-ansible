@@ -7,10 +7,17 @@ on:
         required: true
         options:
           - "raspberrypi"
+          - "ec2"
 
       version:
         description: "Application version to deploy"
         required: true
+
+      deploy_gui:
+        type: boolean
+        description: "Whether to deploy the GUI"
+        required: false
+        default: true
 
 env:
   PLANT: ${{ github.event.inputs.plant }}
@@ -79,3 +86,4 @@ jobs:
           ANSIBLE_HOST_KEY_CHECKING: "False"
           PLANT: ${{ env.PLANT }}
           VERSION: ${{ github.event.inputs.version }}
+          DEPLOY_GUI: ${{ github.event.inputs.deploy_gui }}
