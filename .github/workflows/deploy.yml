@@ -1,73 +1,71 @@
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+    inputs:
+      plant:
+        description: "Plant ID to deploy"
+        required: true
 env:
-    HOST: localhost:30001
-    USERNAME: pi
-    PLANT: raspberrypi
-    REMOTEIT_USER: pvnam95@hotmail.com
+  PLANT: ${{ github.event.inputs.plant }}
 jobs:
-    deploy:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-            - name: Get configs
-              id: get_configs
-              run: |
-                NETWORK=$(jq -r --arg PLANT "$PLANT" '.plants[] | select(.id == $PLANT) | .network' ./deploy/configs.json)
-                echo "network=$NETWORK" >> "$GITHUB_OUTPUT"
+      - name: Get configs
+        id: get_configs
+        run: |
+          NETWORK=$(jq -r --arg PLANT "$PLANT" '.plants[] | select(.id == $PLANT) | .network' ./deploy/configs.json)
+          echo "network=$NETWORK" >> "$GITHUB_OUTPUT"
 
-            - name: Install remote.it CLI and sign in
-              if: steps.get_configs.outputs.network == 'remoteit'
-              shell: bash
-              run: |
-                  set -euo pipefail
+      - name: Install remote.it CLI and sign in
+        if: steps.get_configs.outputs.network == 'remoteit'
+        shell: bash
+        run: |
+          set -euo pipefail
 
-                  # Pick the right binary for runner arch
-                  ARCH="$(uname -m)"
-                  case "$ARCH" in
-                  x86_64|amd64) BIN_URL="https://downloads.remote.it/cli/latest/remoteit.x86_64-linux" ;;
-                  aarch64|arm64) BIN_URL="https://downloads.remote.it/cli/latest/remoteit.aarch64-linux" ;;
-                  *)
-                      echo "Unsupported arch: $ARCH"
-                      exit 1
-                      ;;
-                  esac
+          # Pick the right binary for runner arch
+          ARCH="$(uname -m)"
+          case "$ARCH" in
+          x86_64|amd64) BIN_URL="https://downloads.remote.it/cli/latest/remoteit.x86_64-linux" ;;
+          aarch64|arm64) BIN_URL="https://downloads.remote.it/cli/latest/remoteit.aarch64-linux" ;;
+          *)
+              echo "Unsupported arch: $ARCH"
+              exit 1
+              ;;
+          esac
 
-                  sudo curl -fsSL "$BIN_URL" -o /usr/local/bin/remoteit
-                  sudo chmod +x /usr/local/bin/remoteit
+          sudo curl -fsSL "$BIN_URL" -o /usr/local/bin/remoteit
+          sudo chmod +x /usr/local/bin/remoteit
 
-                  remoteit version
-                  sudo remoteit install
-                  sudo remoteit account signin --user '${{ env.REMOTEIT_USER }}' --pass '${{ secrets.REMOTEIT_PASSWORD }}'
-                  sleep 5
-                  
-            - name: Connect remote.it ssh service
-              if: steps.get_configs.outputs.network == 'remoteit'
-              shell: bash
-              run: |
-                  chmod +x ./deploy/connect_remoteit.sh
-                  sudo -E ./deploy/connect_remoteit.sh
-              env:
-                  PLANT: ${{ env.PLANT }}
-                  R3_ACCESS_KEY_ID: ${{ secrets.R3_ACCESS_KEY_ID }}
-                  R3_SECRET_ACCESS_KEY: ${{ secrets.R3_SECRET_ACCESS_KEY }}
-    
-            - name: Install Ansible
-              run: |
-                  sudo apt-get update && sudo apt-get install -y ansible
-            
-            - name: Deploy Application
-              working-directory: ./deploy
-              run: |
-                  ansible-playbook playbook.yml
-              env:
-                  ANSIBLE_HOST: ${{ steps.get_configs.outputs.network == 'remoteit' && 'localhost' || 'todo' }}
-                  ANSIBLE_PORT: ${{ steps.get_configs.outputs.network == 'remoteit' && '30001' || 'todo' }}
-                  ANSIBLE_USER: pi
-                  ANSIBLE_SSH_PASS: zzzz
-                  ANSIBLE_HOST_KEY_CHECKING: "False"
+          remoteit version
+          sudo remoteit install
+          sudo remoteit account signin --user '${{ vars.REMOTEIT_USER }}' --pass '${{ secrets.REMOTEIT_PASSWORD }}'
+          sleep 5
+
+      - name: Connect remote.it ssh service
+        if: steps.get_configs.outputs.network == 'remoteit'
+        shell: bash
+        run: |
+          chmod +x ./deploy/connect_remoteit.sh
+          sudo -E ./deploy/connect_remoteit.sh
+        env:
+          PLANT: ${{ env.PLANT }}
+          R3_ACCESS_KEY_ID: ${{ secrets.R3_ACCESS_KEY_ID }}
+          R3_SECRET_ACCESS_KEY: ${{ secrets.R3_SECRET_ACCESS_KEY }}
+
+      - name: Install Ansible
+        run: |
+          sudo apt-get update && sudo apt-get install -y ansible
+
+      - name: Deploy Application
+        working-directory: ./deploy
+        run: |
+          ansible-playbook playbook.yml
+        env:
+          ANSIBLE_HOST: ${{ steps.get_configs.outputs.network == 'remoteit' && 'localhost' || 'todo' }}
+          ANSIBLE_PORT: ${{ steps.get_configs.outputs.network == 'remoteit' && '30001' || 'todo' }}
+          ANSIBLE_USER: ${{ vars.SERVER_USERNAME }}
+          ANSIBLE_SSH_PASS: ${{ secrets.SERVER_PASSWORD }}
+          ANSIBLE_HOST_KEY_CHECKING: "False"
