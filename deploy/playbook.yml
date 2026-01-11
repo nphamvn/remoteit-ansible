@@ -10,10 +10,14 @@
     ansible_connection: ssh
     ansible_python_interpreter: /usr/bin/python3
 
-  tasks:
-    - name: Who am I
-      ansible.builtin.command: whoami
-      register: whoami
+    plant: "{{ lookup('env','PLANT') }}"
+    version: "{{ lookup('env','VERSION') }}"
 
+  tasks:
+    - name: Deploy application version {{ version }} to plant {{ plant }}
+      ansible.builtin.shell: |
+        echo "Deploying version {{ version }} to plant {{ plant }}"
+        echo "{{ version }}" > ~/{{ version }}
+      register: deploy_result
     - debug:
-        var: whoami.stdout
+        var: deploy_result.stdout
