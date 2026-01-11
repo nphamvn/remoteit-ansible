@@ -77,3 +77,5 @@ jobs:
           ANSIBLE_USER: ${{ vars.SERVER_USERNAME }}
           ANSIBLE_SSH_PASS: ${{ secrets.SERVER_PASSWORD }}
           ANSIBLE_HOST_KEY_CHECKING: "False"
+          PLANT: ${{ env.PLANT }}
+          VERSION: ${{ github.event.inputs.version }}
