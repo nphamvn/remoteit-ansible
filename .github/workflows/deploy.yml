@@ -48,20 +48,18 @@ jobs:
                   PLANT: ${{ env.PLANT }}
                   R3_ACCESS_KEY_ID: ${{ secrets.R3_ACCESS_KEY_ID }}
                   R3_SECRET_ACCESS_KEY: ${{ secrets.R3_SECRET_ACCESS_KEY }}
-
-            - name: Install sshpass
-              run: sudo apt-get update && sudo apt-get install -y sshpass
-
-            - name: Test SSH Connection
-              shell: bash
+    
+            - name: Install Ansible
               run: |
-                sshpass -p 'zzzz' ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -p 30001 pi@localhost "echo 'Deployment successful!' > /home/pi/deployment_status.txt"     
-            # - name: Install Ansible
-            #   run: |
-            #       sudo apt-get update
-            #       sudo apt-get install -y ansible
+                  sudo apt-get update && sudo apt-get install -y ansible
             
-            # - name: Deploy Application
-            #   working-directory: ./deploy
-            #   run: |
-            #       ansible-playbook playbook.yml
+            - name: Deploy Application
+              working-directory: ./deploy
+              run: |
+                  ansible-playbook playbook.yml 
+              env:
+                  ANSIBLE_HOST: localhost
+                  ANSIBLE_PORT: 30001
+                  ANSIBLE_USER: pi
+                  ANSIBLE_SSH_PASS: zzzz
+                  ANSIBLE_HOST_KEY_CHECKING: "False"

@@ -1,16 +1,21 @@
----
-- name: Simple ping test
-  hosts: localhost
+- name: Deploy application
+  hosts: all
   gather_facts: false
+
   vars:
-    ansible_host: localhost
-    ansible_port: 30001
-    ansible_user: pi
-    ansible_password: zzzz
-    ansible_ssh_common_args: '-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+    ansible_host: "{{ lookup('env','ANSIBLE_HOST') }}"
+    ansible_port: "{{ lookup('env','ANSIBLE_PORT') | int }}"
+    ansible_user: "{{ lookup('env','ANSIBLE_USER') }}"
+    ansible_ssh_pass: "{{ lookup('env','ANSIBLE_SSH_PASS') }}"
+    ansible_connection: ssh
 
   tasks:
-    - name: Ping host
+    - name: Test connection
       ansible.builtin.ping:
-    - name: Write a file to the remote host use command module
-      ansible.builtin.command: echo "Deployment successful!" > /home/pi/deployment_status.txt      
+
+    - name: Who am I
+      ansible.builtin.command: whoami
+      register: whoami
+
+    - debug:
+        var: whoami.stdout
