@@ -1,14 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Load .env (for local run)
-if [ -f ".env" ]; then
-  echo "Loading .env file"
-  set -a          # auto export
-  source .env
-  set +a
-fi
-
 SSH_SERVICE_NAME=${SSH_SERVICE_NAME:-"SSH"}
 echo "Finding ssh service id for plant '${PLANT}' using service name '${SSH_SERVICE_NAME}'"
 

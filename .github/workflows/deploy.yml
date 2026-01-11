@@ -19,8 +19,6 @@ on:
         required: false
         default: true
 
-env:
-  PLANT: ${{ github.event.inputs.plant }}
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -56,6 +54,7 @@ jobs:
 
           remoteit version
           sudo remoteit install
+          # TODO: signin with secret key/ api token instead of password
           sudo remoteit account signin --user '${{ vars.REMOTEIT_USER }}' --pass '${{ secrets.REMOTEIT_PASSWORD }}'
           sleep 5
 
@@ -66,7 +65,7 @@ jobs:
           chmod +x ./deploy/connect_remoteit.sh
           sudo -E ./deploy/connect_remoteit.sh
         env:
-          PLANT: ${{ env.PLANT }}
+          PLANT: ${{ github.event.inputs.plant }}
           R3_ACCESS_KEY_ID: ${{ secrets.R3_ACCESS_KEY_ID }}
           R3_SECRET_ACCESS_KEY: ${{ secrets.R3_SECRET_ACCESS_KEY }}
 
@@ -79,11 +78,13 @@ jobs:
         run: |
           ansible-playbook playbook.yml
         env:
+          # Connection specific variables
           ANSIBLE_HOST: ${{ steps.get_configs.outputs.network == 'remoteit' && 'localhost' || 'todo' }}
           ANSIBLE_PORT: ${{ steps.get_configs.outputs.network == 'remoteit' && '30001' || 'todo' }}
           ANSIBLE_USER: ${{ vars.SERVER_USERNAME }}
           ANSIBLE_SSH_PASS: ${{ secrets.SERVER_PASSWORD }}
           ANSIBLE_HOST_KEY_CHECKING: "False"
-          PLANT: ${{ env.PLANT }}
+          # Deployment specific variables
+          PLANT: ${{ github.event.inputs.plant }}
           VERSION: ${{ github.event.inputs.version }}
           DEPLOY_GUI: ${{ github.event.inputs.deploy_gui }}
