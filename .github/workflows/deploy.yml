@@ -43,7 +43,7 @@ jobs:
               shell: bash
               run: |
                   chmod +x ./deploy/connect_remoteit.sh
-                  sudo ./deploy/connect_remoteit.sh
+                  sudo -E ./deploy/connect_remoteit.sh
               env:
                   PLANT: ${{ env.PLANT }}
                   R3_ACCESS_KEY_ID: ${{ secrets.R3_ACCESS_KEY_ID }}
