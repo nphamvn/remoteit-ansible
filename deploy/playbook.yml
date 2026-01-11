@@ -8,6 +8,7 @@
     ansible_user: "{{ lookup('env','ANSIBLE_USER') }}"
     ansible_ssh_pass: "{{ lookup('env','ANSIBLE_SSH_PASS') }}"
     ansible_connection: ssh
+    ansible_python_interpreter: /usr/bin/python3
 
   tasks:
     - name: Who am I
