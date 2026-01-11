@@ -15,7 +15,14 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v4
 
+            - name: Get configs
+              id: get_configs
+              run: |
+                NETWORK=$(jq -r --arg PLANT "$PLANT" '.plants[] | select(.id == $PLANT) | .network' ./deploy/configs.json)
+                echo "network=$NETWORK" >> "$GITHUB_OUTPUT"
+
             - name: Install remote.it CLI and sign in
+              if: steps.get_configs.outputs.network == 'remoteit'
               shell: bash
               run: |
                   set -euo pipefail
@@ -40,6 +47,7 @@ jobs:
                   sleep 5
                   
             - name: Connect remote.it ssh service
+              if: steps.get_configs.outputs.network == 'remoteit'
               shell: bash
               run: |
                   chmod +x ./deploy/connect_remoteit.sh
@@ -56,10 +64,10 @@ jobs:
             - name: Deploy Application
               working-directory: ./deploy
               run: |
-                  ansible-playbook playbook.yml 
+                  ansible-playbook playbook.yml
               env:
-                  ANSIBLE_HOST: localhost
-                  ANSIBLE_PORT: 30001
+                  ANSIBLE_HOST: ${{ steps.get_configs.outputs.network == 'remoteit' && 'localhost' || 'todo' }}
+                  ANSIBLE_PORT: ${{ steps.get_configs.outputs.network == 'remoteit' && '30001' || 'todo' }}
                   ANSIBLE_USER: pi
                   ANSIBLE_SSH_PASS: zzzz
                   ANSIBLE_HOST_KEY_CHECKING: "False"

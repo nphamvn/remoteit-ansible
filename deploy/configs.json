@@ -1,0 +1,8 @@
+{
+    "plants": [
+        {
+            "id": "raspberrypi",
+            "network": "remoteit"
+        }
+    ]
+}
