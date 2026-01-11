@@ -2,8 +2,16 @@ on:
   workflow_dispatch:
     inputs:
       plant:
+        type: choice
         description: "Plant ID to deploy"
         required: true
+        options:
+          - "raspberrypi"
+
+      version:
+        description: "Application version to deploy"
+        required: true
+
 env:
   PLANT: ${{ github.event.inputs.plant }}
 jobs:
@@ -13,7 +21,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Get configs
+      - name: Get configs #TODO: should get from API or AWS Secret Manager
         id: get_configs
         run: |
           NETWORK=$(jq -r --arg PLANT "$PLANT" '.plants[] | select(.id == $PLANT) | .network' ./deploy/configs.json)
