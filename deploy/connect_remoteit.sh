@@ -49,9 +49,8 @@ if [ -z "${SSH_SERVICE_ID}" ]; then
     exit 1
 fi
 
-echo "DEVICE_ID: ${DEVICE_ID}"
-echo "SSH_SERVICE_ID: ${SSH_SERVICE_ID}"
-remoteit connection add --id ${SSH_SERVICE_ID} --port 30001 --name "ssh" --connectAtStart true
+echo "Adding remoteit connection for SSH service id '${SSH_SERVICE_ID}' on local port '${LOCAL_PORT}'"
+remoteit connection add --id ${SSH_SERVICE_ID} --port ${LOCAL_PORT} --name "ssh" --connectAtStart true
 
 # Wait for connection to be established
 INTERVAL=5

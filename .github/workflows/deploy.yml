@@ -70,6 +70,7 @@ jobs:
           PLANT: ${{ github.event.inputs.plant }}
           R3_ACCESS_KEY_ID: ${{ secrets.R3_ACCESS_KEY_ID }}
           R3_SECRET_ACCESS_KEY: ${{ secrets.R3_SECRET_ACCESS_KEY }}
+          LOCAL_PORT: 30001
 
       - name: Install Ansible
         run: |
