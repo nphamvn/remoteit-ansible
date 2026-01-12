@@ -91,7 +91,6 @@ jobs:
             --secret-id openvpn-client \
             --query SecretString \
             --output text > client.ovpn
-          echo "::add-mask::$(head -n 1 client.ovpn)"
           chmod 600 client.ovpn
 
       - name: Install OpenVPN client and connect
@@ -101,11 +100,6 @@ jobs:
           sudo openvpn --config client.ovpn --daemon && \
           sleep 10
 
-      - name: Cleanup
-        if: always() && steps.get_configs.outputs.network == 'vpn'
-        run: |
-          sudo pkill openvpn || true
-          rm -f client.ovpn
       # Network Connection Steps::End
       - name: Install Ansible
         run: |
@@ -126,6 +120,12 @@ jobs:
           PLANT: ${{ github.event.inputs.plant }}
           VERSION: ${{ github.event.inputs.version }}
           DEPLOY_GUI: ${{ github.event.inputs.deploy_gui }}
+
+      - name: Cleanup
+        if: always() && steps.get_configs.outputs.network == 'vpn'
+        run: |
+          sudo pkill openvpn || true
+          rm -f client.ovpn
   complete_deploy:
     needs: deploy
     runs-on: ubuntu-latest
