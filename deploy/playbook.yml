@@ -14,6 +14,8 @@
     version: "{{ lookup('env','VERSION') }}"
     deploy_gui: "{{ lookup('env','DEPLOY_GUI') | default('true') | bool }}"
 
+    script_path: /home/{{ ansible_user }}/greeter.sh
+
   tasks:
     - name: Deploy application version {{ version }} to plant {{ plant }} with GUI={{ deploy_gui }}
       ansible.builtin.shell: |
@@ -22,3 +24,26 @@
       register: deploy_result
     - debug:
         var: deploy_result.stdout
+    - name: Copy greeter script to server
+      copy:
+        src: files/greeter.sh
+        dest: "{{ script_path }}"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: '0755'
+    - name: Copy systemd service file
+      copy:
+        src: files/greeter.service
+        dest: /etc/systemd/system/greeter.service
+        owner: root
+        group: root
+        mode: '0644'
+      
+    - name: Reload systemd to recognize new service
+      command: systemctl daemon-reload
+
+    - name: Enable and start greeter service
+      systemd:
+        name: "{{ service_name }}"
+        enabled: yes
+        state: started
