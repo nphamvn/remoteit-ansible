@@ -36,7 +36,7 @@ resource "aws_iam_role" "github_actions" {
         Condition = {
           StringEquals = {
             "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
-            "token.actions.githubusercontent.com:sub" = "repo:nphamvn/remoteit-ansible:ref:refs/heads/main"
+            "token.actions.githubusercontent.com:sub" = "repo:nphamvn/ansible-for-private-server:ref:refs/heads/main"
           }
         }
       }
