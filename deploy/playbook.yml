@@ -46,6 +46,6 @@
 
     - name: Enable and start greeter service
       systemd:
-        name: "{{ service_name }}"
+        name: greeter.service
         enabled: yes
         state: started
